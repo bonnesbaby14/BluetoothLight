@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 void main() => runApp(MyApp());
 
@@ -59,9 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('Bluetooth Ligth'),
+        
         centerTitle: true,
         actions: <Widget>[
-
+            IconButton(
+            icon: const Icon(Icons.bluetooth,size: 40,),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+          
+          print("holi");
+            },
+          ),
         ],
       ),
       body: Center(
