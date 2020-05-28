@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:convert';
 
 
 void main() => runApp(MyApp());
@@ -41,6 +43,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -51,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+      BluetoothConnection connection;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -65,15 +69,15 @@ class _MyHomePageState extends State<MyHomePage> {
         
         centerTitle: true,
         actions: <Widget>[
+          IconButton(icon: const Icon(Icons.bluetooth_disabled,size: 40,),onPressed: (){
+            connection.close();
+          },),
             IconButton(
             icon: const Icon(Icons.bluetooth,size: 40,),
             tooltip: 'Show Snackbar',
             onPressed: () async {
               FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance;
-               List<BluetoothDevice> _devicesList = [];
-  BluetoothDevice _device;
-  bool _connected = false;
-  bool _pressed = false;
+         
    List<BluetoothDevice> devices = [];
 
     // To get the list of paired devices
@@ -83,12 +87,17 @@ for (BluetoothDevice r in devices) {
         lista.add(GestureDetector(child:Card(child: Container(child: Text("${r.name} / ${r.address}")),),onTap: ()async{print("se preciono uno");
         
         ///
-        bluetooth
-              .connect(_device)
-              .timeout(Duration(seconds: 10))
-              .catchError((error) {
-  print("HUBO UN ERROR_________________________");
-          });
+        ///
+        ///
+    
+         connection = await BluetoothConnection.toAddress(r.address);
+
+    print('Connected to the device');
+    Navigator.of(context).pop();
+    connection.output.add(ascii.encode('H'));
+    
+    
+      
           
           
         ///
@@ -136,7 +145,7 @@ print("holiiia");
               Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Text(
-             "FOCO 1",
+             "LIGHT 1",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
@@ -157,6 +166,7 @@ print("holiiia");
                   child: FlatButton(
                     color: Colors.blue,
                     onPressed:(){
+                      connection.output.add(ascii.encode('1'));
                       print("object");
                     } ,
                     child: Text(
@@ -181,7 +191,7 @@ print("holiiia");
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child:  Text(
-                    "Foco 2",
+                    "LIGHT 2",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
@@ -202,6 +212,7 @@ print("holiiia");
                   ),
                   child: FlatButton(
                     onPressed:(){
+                      connection.output.add(ascii.encode('2'));
                       print("object");
                     } ,
                     color: Colors.deepPurple,
