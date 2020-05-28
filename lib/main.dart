@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+
+
 
 void main() => runApp(MyApp());
 
@@ -66,9 +68,48 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
             icon: const Icon(Icons.bluetooth,size: 40,),
             tooltip: 'Show Snackbar',
-            onPressed: () {
-          
-          print("holi");
+            onPressed: () async {
+              FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance;
+               List<BluetoothDevice> _devicesList = [];
+  BluetoothDevice _device;
+  bool _connected = false;
+  bool _pressed = false;
+   List<BluetoothDevice> devices = [];
+
+    // To get the list of paired devices
+    List<Widget> lista=new  List<Widget>();
+   devices = await bluetooth.getBondedDevices();
+for (BluetoothDevice r in devices) {
+        lista.add(GestureDetector(child:Card(child: Container(child: Text("${r.name} / ${r.address}")),),onTap: (){print("se preciono uno");},));
+        // lista.add(item);
+        // print('${r.name} found! rssi: ${r.address}');
+
+
+    }
+
+         
+        // print('${r.name} found! rssi: ${r.address}');
+        
+ 
+             
+
+   showDialog(
+      context: context,
+      builder: (buildcontext) {
+        return AlertDialog(
+          title: Text("Paired Devices"),
+          content: ListView(children: lista,),
+          actions: <Widget>[
+            RaisedButton(color: Colors.purple,
+              child: Text("CERRAR", style: TextStyle(color: Colors.white),),
+              onPressed: (){ Navigator.of(context).pop(); },
+            )
+          ],
+        );
+
+    });
+print("holiiia");
+
             },
           ),
         ],
