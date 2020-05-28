@@ -80,7 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> lista=new  List<Widget>();
    devices = await bluetooth.getBondedDevices();
 for (BluetoothDevice r in devices) {
-        lista.add(GestureDetector(child:Card(child: Container(child: Text("${r.name} / ${r.address}")),),onTap: (){print("se preciono uno");},));
+        lista.add(GestureDetector(child:Card(child: Container(child: Text("${r.name} / ${r.address}")),),onTap: ()async{print("se preciono uno");
+        
+        ///
+        bluetooth
+              .connect(_device)
+              .timeout(Duration(seconds: 10))
+              .catchError((error) {
+  print("HUBO UN ERROR_________________________");
+          });
+          
+          
+        ///
+        
+        },));
         // lista.add(item);
         // print('${r.name} found! rssi: ${r.address}');
 
